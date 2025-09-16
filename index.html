@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Riesgo y Control Interno - Textiles del Sur S.A.C.</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --primary-color: #003366; /* Azul oscuro corporativo */
+            --secondary-color: #005A9C; /* Azul más brillante */
+            --accent-color: #f39c12; /* Naranja/dorado para acentos */
+            --light-gray: #f4f7f9;
+            --dark-gray: #333333;
+            --text-color: #2c3e50;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            margin: 0;
+            overflow: hidden; /* Evita el scroll de la página entera */
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            padding: 40px 60px;
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(20px);
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out, visibility 0.6s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        .slide-content {
+            width: 100%;
+            max-width: 1100px;
+        }
+        
+        /* Estilos de diapositivas específicas */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+        }
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .slide.title-slide h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+        }
+        .slide.title-slide .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 1em;
+        }
+
+        .slide h3 {
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        /* Acordeón Interactivo */
+        .accordion-item {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: box-shadow 0.3s ease;
+        }
+        .accordion-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        details {
+            width: 100%;
+        }
+
+        summary {
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            list-style: none; /* Oculta el marcador por defecto */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+        details[open] summary {
+            background-color: var(--light-gray);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        summary::-webkit-details-marker { display: none; }
+        
+        .component-title {
+            color: var(--primary-color);
+        }
+        .component-subtitle {
+            font-weight: 400;
+            color: var(--dark-gray);
+            background-color: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        summary::after {
+            content: '+';
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--secondary-color);
+            transition: transform 0.3s ease;
+        }
+        details[open] summary::after {
+            content: '−';
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            padding: 20px 25px;
+            background-color: #ffffff;
+            border-top: 1px solid var(--border-color);
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-box {
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .detail-box h4 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            color: var(--dark-gray);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        .detail-box p, .detail-box ul {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+        .detail-box ul { padding-left: 20px; }
+        .detail-box ul ul { margin-top: 5px; }
+
+
+        .situation-box { background-color: #e7f3fe; border-left: 4px solid #4a90e2; }
+        .nia-box { background-color: #e8f5e9; border-left: 4px solid #4caf50; }
+        .risk-box { background-color: #fff3e0; border-left: 4px solid #f39c12; }
+        .action-box { background-color: #e8eaf6; border-left: 4px solid #3f51b5; }
+
+        /* Navegación */
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .nav-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .nav-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        .nav-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            font-size: 1rem;
+            color: #999;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        .conclusion-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .conclusion-list li {
+            background-color: var(--light-gray);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-left: 5px solid var(--accent-color);
+            font-size: 1.1rem;
+        }
+        .conclusion-list strong {
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 8px;
+        }
+        .justification-text {
+            font-style: italic;
+            color: var(--dark-gray);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+
+        <!-- Diapositiva 1: Título -->
+        <section class="slide title-slide active">
+            <div class="slide-content">
+                <h1>Análisis de Casos de Auditoría</h1>
+                <h2>Textiles del Sur S.A.C. & Turismo Andino</h2>
+                <p class="subtitle">Evaluación de Evidencia y Riesgos Potenciales</p>
+            </div>
+        </section>
+
+        <!-- Diapositiva 2: Casos de Estudio -->
+        <section class="slide">
+            <div class="slide-content">
+                <h3>Análisis de Riesgos Clave</h3>
+
+                <!-- Caso 1: Cuentas por Cobrar -->
+                <div class="accordion-item">
+                    <details>
+                        <summary>
+                            <span class="component-title">Caso 1: Cuentas por Cobrar (Práctica 09.09)</span>
+                            <span class="component-subtitle">Confirmaciones con Discrepancias</span>
+                        </summary>
+                        <div class="accordion-content">
+                            <div class="detail-grid">
+                                <div class="detail-box situation-box">
+                                    <h4>Situación</h4>
+                                    <p>De un saldo de S/ 3M, se circulariza al 65%. Un cliente reporta una discrepancia de S/ 200,000 y otro no responde. La gerencia atribuye la discrepancia a un "error de registro del cliente".</p>
+                                </div>
+                                <div class="detail-box nia-box">
+                                    <h4>Análisis según las NIA</h4>
+                                    <ul>
+                                        <li><b>NIA 500 (p. 379, párr. A35):</b> La evidencia externa contradice a la interna, lo que reduce la fiabilidad de las afirmaciones de la gerencia y obliga al auditor a aplicar escepticismo profesional.</li>
+                                        <li><b>NIA 505 (p. 396-399, párr. 12 y 14):</b> Se deben aplicar procedimientos alternativos.
+                                            <ul>
+                                                <li><b>Falta de respuesta:</b> Examen de cobros posteriores, revisión de documentación de despachos y ventas cercanas al cierre.</li>
+                                                <li><b>Discrepancia:</b> Revisar facturas, notas de crédito, correspondencia con el cliente o realizar llamadas de seguimiento.</li>
+                                            </ul>
+                                        </li>
+                                        <li><b>NIA 705 (p. 653, párr. 7b y 9):</b> Si no se resuelve, se genera una limitación al alcance. El impacto puede ser una <b>opinión con salvedades</b> (material pero no generalizado) o una <b>denegación de opinión</b> (material y generalizado).</li>
+                                    </ul>
+                                </div>
+                                <div class="detail-box risk-box">
+                                    <h4>⚠️ Riesgo Principal</h4>
+                                    <p>Sobrevaloración de las cuentas por cobrar y los ingresos. La explicación de la gerencia podría ocultar disputas con clientes, errores de facturación o, en el peor caso, ventas ficticias.</p>
+                                </div>
+                                <div class="detail-box action-box">
+                                    <h4>🛡️ Acción del Auditor</h4>
+                                    <p>Aplicar escepticismo profesional. Realizar los procedimientos alternativos indicados para el cliente sin respuesta y solicitar evidencia corroborativa para la discrepancia, contactando directamente al cliente si es necesario.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- Caso 2: Gastos de Viaje -->
+                <div class="accordion-item">
+                    <details>
+                        <summary>
+                            <span class="component-title">Caso 7: Gastos de Viaje (Práctica 10.09)</span>
+                            <span class="component-subtitle">Evidencia Analítica con Inconsistencias</span>
+                        </summary>
+                        <div class="accordion-content">
+                             <div class="detail-grid">
+                                <div class="detail-box situation-box">
+                                    <h4>Situación</h4>
+                                    <p>Los gastos de viaje aumentaron drásticamente de S/ 600,000 a S/ 1.5 millones, mientras las ventas solo crecieron 10%. La gerencia justifica el aumento por capacitaciones, pero no presenta comprobantes suficientes.</p>
+                                </div>
+                                <div class="detail-box nia-box">
+                                    <h4>Análisis según las NIA</h4>
+                                    <ul>
+                                        <li><b>NIA 520 (p. 406, párr. 4):</b> Los procedimientos analíticos son "evaluaciones de información financiera realizadas mediante el análisis de las relaciones plausibles entre datos financieros y no financieros". La relación Gasto/Venta es incongruente.</li>
+                                        <li><b>NIA 520 (p. 407, párr. 7):</b> No son concluyentes por sí solos. El auditor debe investigar mediante indagación y otros procedimientos. Las pruebas adicionales programadas podrían ser:
+                                            <ul>
+                                                <li><b>Verificación documental:</b> Revisar comprobantes de pago, facturas de hotel, boletos de avión, inscripciones a congresos.</li>
+                                                <li><b>Análisis de presupuestos:</b> Comparar gastos con montos presupuestados y aprobados.</li>
+                                                <li><b>Entrevistas:</b> Conversar con responsables y empleados que viajaron.</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="detail-box risk-box">
+                                    <h4>⚠️ Riesgo Principal</h4>
+                                    <p>Que los gastos sean ficticios o fraudulentos (ocultando gastos personales), estén incorrectamente clasificados o que la falta de sustento genere contingencias fiscales por no ser deducibles.</p>
+                                </div>
+                                <div class="detail-box action-box">
+                                    <h4>🛡️ Acción del Auditor</h4>
+                                    <p>Aplicar pruebas de detalle como las mencionadas (verificación documental, presupuestos, entrevistas) para corroborar la explicación de la gerencia y la naturaleza real de los gastos registrados.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- Diapositiva 3: Conclusiones -->
+        <section class="slide">
+            <div class="slide-content">
+                <h3>Estimación del Escenario Más Probable y Justificación</h3>
+                <ul class="conclusion-list">
+                    <li>
+                        <strong>Caso Cuentas por Cobrar: Es probable que exista una incorrección material.</strong>
+                        El escenario más probable no es un simple "error del cliente", sino un problema real que la gerencia intenta minimizar. Podría ser una disputa comercial, mercancía devuelta o un error en el registro de ingresos de la propia empresa.
+                        <p class="justification-text">
+                            <strong>Justificación:</strong> La combinación de una discrepancia material (S/ 200,000) y una falta de respuesta, que en conjunto afectan una porción significativa del saldo, es una bandera roja. La respuesta defensiva e inmediata de la gerencia, sin evidencia de respaldo, aumenta el escepticismo del auditor.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Caso Gastos de Viaje: Es altamente probable que los gastos estén inflados o contengan partidas no relacionadas con el negocio.</strong>
+                        El escenario más probable es que la explicación de la gerencia sea insuficiente y que una parte significativa del aumento corresponda a gastos personales de los directivos o a desembolsos que no cumplen los requisitos para ser considerados gastos operativos.
+                        <p class="justification-text">
+                            <strong>Justificación:</strong> Un aumento del 150% en un gasto variable como los viajes, frente a un aumento de solo el 10% en ventas, es una inconsistencia analítica extrema. La incapacidad o negativa de la gerencia para proporcionar documentación de respaldo suficiente es un fuerte indicio de que los gastos no pueden ser validados, lo que apunta a un posible fraude o a una gestión financiera deficiente.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- Diapositiva 4: Final -->
+        <section class="slide title-slide">
+            <div class="slide-content">
+                <h1>Preguntas y Discusión</h1>
+                <h2 style="font-weight: 300;">Gracias por su atención.</h2>
+            </div>
+        </section>
+    </div>
+
+    <div class="navigation">
+        <button id="prevBtn" class="nav-btn">Anterior</button>
+        <button id="nextBtn" class="nav-btn">Siguiente</button>
+    </div>
+    
+    <div id="slideCounter" class="slide-counter"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+                
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === slides.length - 1;
+                
+                slideCounter.textContent = `${index + 1} / ${slides.length}`;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    showSlide(currentSlide);
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    showSlide(currentSlide);
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    nextBtn.click();
+                } else if (e.key === 'ArrowLeft') {
+                    prevBtn.click();
+                }
+            });
+
+            showSlide(currentSlide);
+        });
+    </script>
+
+</body>
+</html>
